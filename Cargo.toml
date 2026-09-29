@@ -1,0 +1,46 @@
+[package]
+name = "vaulta"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.74"
+license = "MIT"
+description = "Argon2id ve XChaCha20-Poly1305 ile sifreli, tamamen cevrimdisi tek dosya parola kasasi."
+repository = "https://github.com/SyntaxOrigin/vaulta"
+readme = "README.md"
+keywords = ["cli", "vaulta", "password-manager", "argon2", "xchacha20poly1305"]
+categories = ["command-line-utilities", "cryptography"]
+
+[lib]
+name = "vaulta"
+path = "src/lib.rs"
+
+[[bin]]
+name = "vaulta"
+path = "src/main.rs"
+
+[dependencies]
+# argon2: ana paroladan bellek-zorlu ana malzeme turetir; Argon2id, RFC 9106 (MANIFEST kart 16, madde 2).
+argon2 = "0.5"
+# chacha20poly1305: kayit ve dizin sayfalarini 192-bit rastgele nonce ile sifreler ve etikini dogrular (MANIFEST kart 16, madde 3).
+chacha20poly1305 = "0.10"
+# hkdf: ana malzemeden dizin, sayfa ve cerceve etiketi anahtarlarini ayri info etiketleriyle turetir.
+hkdf = "0.12"
+# sha2: HKDF'in ozeti olarak SHA-256; cerceve etiketi (kayit duzeyi butunluk) dogrudan SHA-256 karmasi ile uretilir.
+sha2 = "0.10"
+# getrandom: kasa tuzu, sayfa nonce'lari ve parola uretec baytlari isletim sistemi kriptografik rastgeleliginden gelir; `rand` yasakli.
+getrandom = "0.3"
+# zeroize: ana malzeme, alt anahtarlar, duz metin ve parola tamponlari kullanim sonrasi sifirlanir.
+zeroize = "1"
+# serde: kayit semasi ve JSON disa/ice aktarma yapisini turetilmis veri tipleriyle tanimlar (kaynak: src/kayit.rs, src/aktarim.rs).
+serde = { version = "1", features = ["derive"] }
+# serde_json: disa aktarilan kasa icerigi JSON olarak yazilir ve yeniden okunarak dogrulanir (kaynak: src/aktarim.rs).
+serde_json = "1"
+# clap: `vaulta init|add|list|get|remove|change-master|export-verified|uret` alt komutlu arayuz (kaynak: src/main.rs).
+clap = { version = "4", features = ["derive"] }
+
+[profile.release]
+opt-level = 3
+lto = "thin"
+codegen-units = 1
+panic = "abort"
+strip = "debuginfo"

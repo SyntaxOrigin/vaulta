@@ -1,0 +1,52 @@
+name: CI
+
+# Kalite kapısı (WORKER_CONTRACT §4 uyarınca) dört komutu da yeşil tutar:
+# build --release, test, clippy -- -D warnings ve fmt --check.
+# Kasa bir güvenlik ürünü olduğu için uyarı (warning) da başarısızlıktır.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+env:
+  CARGO_TERM_COLOR: always
+  RUSTFLAGS: -D warnings
+
+jobs:
+  kalite:
+    name: kalite kapisi
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Rust kurulumu (MSRV 1.74)
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: 1.74.0
+          components: rustfmt, clippy
+
+      - name: Rust kurulumu (en son kararli)
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+          components: rustfmt, clippy
+
+      - uses: Swatinem/rust-cache@v2
+
+      - name: cargo build --release
+        run: cargo build --release --locked
+
+      - name: cargo test --locked
+        run: cargo test --locked
+
+      - name: cargo clippy --all-targets -- -D warnings
+        run: cargo clippy --all-targets --locked -- -D warnings
+
+      - name: cargo fmt --check
+        run: cargo fmt --all -- --check

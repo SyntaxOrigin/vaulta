@@ -1,0 +1,8 @@
+/target/
+.env
+*.log
+*.tmp
+*.kasa
+.vscode/
+.idea/
+*.swp
