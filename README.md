@@ -72,10 +72,13 @@ $ cargo build --release
 ```console
 $ cargo install --path .
    Compiling vaulta v0.1.0
-    Finished `release` profile [optimized] target(s) in 24.62s
+    Finished `release` profile [optimized] target(s) in 22.44s
   Installing vaulta v0.1.0 (%USERPROFILE%\.cargo\bin)
    Installed package `vaulta v0.1.0` executable
 ```
+
+> `cargo install --path .` bağımlılık sürümlerini `Cargo.lock`'a bakmadan yeniden
+> çözer. Tekrarlanabilir kurulum için `cargo install --path . --locked` kullanın.
 
 ---
 
@@ -407,9 +410,10 @@ $ cargo test
      Running unittests src\lib.rs (target\debug\deps\vaulta-e8b60c1df123e0f2.exe)
 
 running 96 tests
-test result: ok. 96 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.03s
+...
+test result: ok. 96 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.89s
 
-     Running unittests src/main.rs (target\debug\deps\vaulta-29a45e4f9273b804.exe)
+     Running unittests src\main.rs (target\debug\deps\vaulta-2945ed1fd928b804.exe)
 
 running 0 tests
 test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
@@ -417,22 +421,26 @@ test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; fini
      Running tests\bozulma_ve_kurcalama.rs (target\debug\deps\bozulma_ve_kurcalama-699a0a9df30b031f.exe)
 
 running 15 tests
-test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 3.85s
+test kisa_dosya_reddedilir ... ok
+test baslikta_kurcalama_kasayi_acmaz ... ok
+...
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 3.05s
 
      Running tests\guvenlik_sozlesmesi.rs (target\debug\deps\guvenlik_sozlesmesi-6e13966ceedfd9e3.exe)
 
 running 12 tests
-test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.14s
+test gecersiz_argon2_ayari_kasayi_acmaz ... ok
+test kendi_kodumuzda_unsafe_kullanilmaz ... ok
+...
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.06s
 
      Running tests\kasa_yasam_dongusu.rs (target\debug\deps\kasa_yasam_dongusu-b081087a2966767f.exe)
 
 running 25 tests
-test result: ok. 25 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.61s
-
-     Running tests\yardimci\mod.rs (...)
-
-running 0 tests
-test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test bozuk_aktarma_json_reddedilir ... ok
+test bos_kasa_disa_aktarmasi_gecerli_belgedir ... ok
+...
+test result: ok. 25 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.55s
 
    Doc-tests vaulta
 
@@ -441,6 +449,8 @@ test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; fini
 ```
 
 **Test sonucu: okunan 148; geçen 148; başarısız 0** (96 birim + 52 entegrasyon).
+Satır listeleri kısaltılmıştır (`...`); tam liste `cargo test` çıktısındadır.
+`tests/yardimci/mod.rs` bağımsız bir test hedefi değildir, `mod` olarak derlenir.
 
 ### Kapsanan senaryolar
 
